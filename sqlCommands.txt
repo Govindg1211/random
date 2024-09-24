@@ -1,0 +1,181 @@
+SELECT * FROM exceldata.sales; 
+
+#Where clause
+SELECT * FROM exceldata.sales where Coupon_Category = "CAT B";
+
+# order by function
+select * from exceldata.sales order by Store_Area asc;
+select * from exceldata.sales order by Items_Available desc;
+select * from exceldata.sales limit 10;
+
+# in and not in
+SELECT * FROM exceldata.sales where Dist_Market between  12000 and 13000;
+select * from exceldata.sales where parking in ("Open", "Covered");
+select * from exceldata.sales where parking not in ("Open", "Covered");
+select * from exceldata.sales where parking in ("Open", "Covered") and Coupon_Category in ("CAT A", "CAT B");
+SELECT * FROM exceldata.ai job;
+
+# String functions
+select concat(Locaton, " - ", Inustry) as post from exceldata.ai job;
+select concat(Dist_Market, " - ", Parking) as market from exceldata.sales;
+select concat_ws(" - ",Dist_Market, Store_Area, Parking ) as market from exceldata.sales;
+select length(Dist_Market) as market from exceldata.sales;
+select upper(Parking) as market from exceldata.sales;
+select left(Parking, 4) as market from exceldata.sales;
+select right(Parking, 4) as market from exceldata.sales;
+select mid(Parking, 2, 5) as market from exceldata.sales;
+
+# Aggregate functions
+select sum(Store_Sales) as total_sales from exceldata.sales;
+select count(Store_Sales) as total from exceldata.sales;
+select avg(Store_Sales) as average from exceldata.sales;
+select max(Store_Sales) as max_sales from exceldata.sales;
+select min(Store_Sales) as min_sales from exceldata.sales;
+
+select truncte(Store_Sales) as non_decimal_values from exceldata.sales; ## this would when the values will be in decimal, and it is used to remove them
+select ceil(Store_Sales) as non_decimal_values from exceldata.sales; ## it is used to round off the values at the higher value
+select floor(Store_Sales) as non_decimal_values from exceldata.sales; ## it is used to round off the values at the lower value
+
+# Date functions
+SELECT * FROM exceldata.catalog;
+select date(date) as dates from exceldata.catalog ;
+
+# select time(date) as dates from exceldata.catalog;  ## this will tell the time of the data
+#select datediff(shipping_date, ordering_data) as dates from exceldata.catalog; ## this will tell the difference between the two dates
+SELECT dayname(date) as dates from exceldata.catalog;
+select month(date) as dates from exceldata.catalog ;
+select monthname(date) as dates from exceldata.catalog ;
+select year(date) as dates from exceldata.catalog ;
+
+##########    Case Operator     ########### 
+ ## if else of mysql
+select date, population,latitude,
+case
+	when latitude > 20 then "this is a test of when and then"
+    else "this is a test of else"
+end as result
+from exceldata.catalog;
+
+## if elif else 
+select date, population,latitude,
+case
+	when latitude < 20 then "this is a test of when latitude is lower than 20"
+    when latitude > 20 then "this is a test of when it is higher than 20"
+    else "this is a test of else"
+end as result
+from exceldata.catalog;
+
+# Group by function
+select country_name, count(id) from exceldata.catalog group by country_name;
+select country_name, count(id) from exceldata.catalog group by country_name order by count(country_name);
+select country_name, count(id) from exceldata.catalog group by country_name order by count(country_name) desc;
+
+# Having Clause
+select country_name, count(id) from exceldata.catalog group by country_name having count(id) < 100;  ## in this case where clause will not work so wee can use the having clause
+select country_name, count(id) from exceldata.catalog group by country_name having count(id) > 100; 
+select country_name, sum(id) from exceldata.catalog group by country_name having count(id) > 100;
+
+### Joins ###
+## Inner Joins
+select * from exceldata.friends;
+select * from exceldata.friends1;
+select friends.number, friends1.id from friends
+inner join friends1
+on friends.name = friends1.name;
+
+##Left Join
+select friends.number, friends1.id 
+from friends left join friends1
+on friends.name = friends1.name; 
+
+## Right Join
+select friends.number, friends1.id 
+from friends right join friends1
+on friends.name = friends1.name; 
+
+## Cross Join
+select * from friends cross join friends1
+on friends.name = friends1.name;
+
+##Set Operators
+
+#Union Function
+select name, number from friends
+union 
+select name, id from friends1;  ## this will show the union of both the tables (only the commom data)
+
+select name, number from friends
+union all 
+select name, id from friends1;  ## this will tell all the values of both the tables
+
+select name, number from friends
+except
+select name, id from friends1; ##this will the values that are not present in the second dataset
+
+select name, number from friends
+intersect
+select name, id from friends1;
+
+select name, number from friends
+where name in (select name from friends1); # intersect and this code will perform some function, but intersect will give error but this will not
+
+select name, number from friends
+where name not in (select name from friends1);
+
+# Subquries
+select avg (distance) from exceldata.catalog;  # output --> 7.
+select * from exceldata.catalog where distance > 7;
+
+# but these are two separate commnds, now we can see how they can be done one single command which will be called as subquries
+
+select * from exceldata.catalog where distance >
+(select avg (distance) from exceldata.catalog); 
+
+##Views  ## views are the virtual tables that we create on our own ( these are the output of the specific queries)
+
+create view count_of_country as  # naming the specific query which will be saves in the views section
+select country_name, count(country_code) from exceldata.catalog
+group by country_name;  # now you can see in views for this query and its output
+
+create view CAT_A as
+select Dist_Taxi, Dist_Metro from exceldata.sales where Coupon_Category = "CAT A";
+
+#Stored Procedure  ## these are the functions of the sql just like functions in python or c, c++ 
+
+Delimiter && 
+create procedure get_data() # naming of the function 
+begin
+	select * from exceldata.catalog;
+end &&
+Delimiter ;
+
+call exceldata.get_data() # calling of the function justcreated 
+
+Delimiter && 
+create procedure get_limit(in var int)
+begin
+	select * from exceldata.catalog limit var;
+end &&
+Delimiter ;
+call exceldata.get_limit(3)
+
+
+Delimiter && 
+create procedure get_credit(in var int)
+begin
+	select max(distance)into var from exceldata.catalog;
+end &&
+Delimiter ;
+call exceldata.get_credit(@Govind); # using "@" is important  ##
+select @Govind;
+
+#Window Functions
+select country_code, country_name, sum(fatalities) 
+from exceldata.catalog
+group by country_code, country_name ;
+
+select country_code, country_name,fatalities, sum(fatalities)
+over (partition by country_code) from exceldata.catalog ;
+
+select country_code, country_name,fatalities, sum(fatalities)
+over (partition by country_code order by country_code) from exceldata.catalog ;
