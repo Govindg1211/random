@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cute Website</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="script.js" defer></script>
+</head>
+<body>
+    <header>
+        <h1>Welcome to My Website!</h1>
+        <nav>
+            <ul>
+                <li><a href="#about">About</a></li>
+                <li><a href="#gallery">Gallery</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section id="about">
+        <h2>About Us</h2>
+        <p>This website showcases cute features using HTML, CSS, and JavaScript. And it has been made for further purposes</p>
+    </section>
+
+    <section id="gallery">
+        <h2>Gallery</h2>
+        <div class="image-slider">
+            <img src="image1.jpg" class="active" alt="Cute Image 1">
+            <img src="image2.jpg" alt="Cute Image 2">
+            <img src="image3.jpg" alt="Cute Image 3">
+            <button class="prev" onclick="changeSlide(-1)">&#10094;</button>
+            <button class="next" onclick="changeSlide(1)">&#10095;</button>
+        </div>
+        <div class="indicators">
+            <span class="dot active" onclick="currentSlide(0)"></span>
+            <span class="dot" onclick="currentSlide(1)"></span>
+            <span class="dot" onclick="currentSlide(2)"></span>
+        </div>
+    </section>
+
+    <footer id="contact">
+        <h2>Contact Us</h2>
+        <form id="contact-form">
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" required>
+
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required>
+
+            <label for="message">Message:</label>
+            <textarea id="message" name="message" required></textarea>
+
+            <button type="submit">Send Message</button>
+        </form>
+    </footer>
+
+</body>
+</html>
+
+<style>
+body {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #e0f7fa; /* Light cyan */
+}
+
+header {
+    background-color: #ffab40; /* Vibrant orange */
+    padding: 20px;
+    text-align: center;
+}
+
+nav ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+nav ul li {
+    display: inline;
+    margin: 0 15px;
+}
+
+nav a {
+    text-decoration: none;
+    color: #fff; /* White */
+}
+
+section {
+    padding: 20px;
+}
+
+.image-slider {
+    position: relative;
+    max-width: 600px;
+    margin: auto;
+}
+
+.image-slider img {
+    width: 100%;
+    display: none; /* Hide all images by default */
+}
+
+.image-slider img.active {
+    display: block; /* Show the active image */
+}
+
+.prev, .next {
+    cursor: pointer;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.prev {
+    left: 10px;
+}
+
+.next {
+    right: 10px;
+}
+
+.indicators {
+    text-align: center;
+}
+
+.dot {
+    height: 15px;
+    width: 15px;
+    margin: 5px;
+    background-color: #bbb; /* Gray */
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.dot.active {
+    background-color: #ffab40; /* Active dot color */
+}
+
+footer {
+    background-color: #ffccbc; /* Light peach */
+    padding: 20px;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+}
+
+form label {
+    margin-top: 10px;
+}
+
+form input, form textarea {
+    padding: 10px;
+    margin-top: 5px;
+}
+
+form button {
+    margin-top: 10px;
+}
+</style>
+
+<script>
+// Image slider functionality
+let currentSlide = 0;
+
+function showSlides() {
+    const slides = document.querySelectorAll('.image-slider img');
+    
+    slides.forEach((slide, index) => {
+        slide.classList.remove('active');
+        if (index === currentSlide) {
+            slide.classList.add('active');
+        }
+    });
+
+   // Update dots
+   const dots = document.querySelectorAll('.dot');
+   dots.forEach((dot, index) => {
+       dot.classList.remove('active');
+       if (index === currentSlide) {
+           dot.classList.add('active');
+       }
+   });
+}
+
+function changeSlide(direction) {
+   const slides = document.querySelectorAll('.image-slider img');
+   
+   currentSlide += direction;
+
+   if (currentSlide >= slides.length) {
+       currentSlide = 0; // Loop back to the first slide
+   } else if (currentSlide < 0) {
+       currentSlide = slides.length - 1; // Go to the last slide
+   }
+
+   showSlides();
+}
+
+// Set current slide based on dot click
+function currentSlide(index) {
+   currentSlide = index;
+   showSlides();
+}
+
+// Initial call to show the first slide
+showSlides();
+
+// Contact form submission handling
+document.getElementById('contact-form').addEventListener('submit', function(event) {
+   event.preventDefault(); // Prevent default form submission
+
+   const name = document.getElementById('name').value;
+   const email = document.getElementById('email').value;
+   const message = document.getElementById('message').value;
+
+   alert(`Thank you for your message, ${name}! We will get back to you at ${email}.`);
+
+   // Clear the form fields
+   this.reset();
+});
+</script>
